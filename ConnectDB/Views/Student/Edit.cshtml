@@ -1,0 +1,28 @@
+﻿@model ConnectDB.Models.Student
+
+<h2>Sửa sinh viên</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        Mã SV:
+        <input asp-for="StudentCode" />
+        <span asp-validation-for="StudentCode"></span>
+    </div>
+
+    <div>
+        Họ tên:
+        <input asp-for="FullName" />
+        <span asp-validation-for="FullName"></span>
+    </div>
+
+    <div>
+        Ngày sinh:
+        <input asp-for="Birthday" type="date" />
+    </div>
+
+    <button type="submit">Cập nhật</button>
+</form>
+
+<a href="/Student">Quay lại</a>
