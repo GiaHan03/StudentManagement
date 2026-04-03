@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using System.Text.Json.Serialization;
 namespace ConnectDB.Models
 {
     public class Product
@@ -27,8 +27,9 @@ namespace ConnectDB.Models
         public Category? Category { get; set; }
 
         // Navigation
+        [JsonIgnore]
         public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
+        [JsonIgnore]
         public Inventory? Inventory { get; set; }
     }
 }

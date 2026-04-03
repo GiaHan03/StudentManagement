@@ -13,6 +13,6 @@ namespace ConnectDB.Models
         public DateTime NgayCapNhat { get; set; } = DateTime.Now;
 
         [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
     }
 }

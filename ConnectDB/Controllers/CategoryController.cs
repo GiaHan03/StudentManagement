@@ -37,6 +37,8 @@ namespace ConnectDB.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Category category)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 

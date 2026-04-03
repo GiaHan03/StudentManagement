@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;  
 
 namespace ConnectDB.Models
 {
@@ -12,6 +13,7 @@ namespace ConnectDB.Models
         public string TenDanhMuc { get; set; } = string.Empty;
 
         // Navigation property
+        [JsonIgnore]
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
