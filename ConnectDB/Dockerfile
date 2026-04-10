@@ -1,4 +1,4 @@
-# Build stage
+ # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
@@ -15,4 +15,4 @@ ENV ASPNETCORE_URLS=http://+:10000
 
 EXPOSE 10000
 
-ENTRYPOINT ["dotnet", "StudentManagement.dll"]s
+ENTRYPOINT ["dotnet", "ConnectDB.dll"]
