@@ -14,5 +14,8 @@ WORKDIR /app
 
 COPY --from=build /app/out ./
 
-EXPOSE 80
+# Sử dụng biến môi trường PORT của Render (mặc định 10000)
+ENV ASPNETCORE_URLS=http://+:${PORT:-10000}
+EXPOSE ${PORT:-10000}
+
 ENTRYPOINT ["dotnet", "ConnectDB.dll"]
