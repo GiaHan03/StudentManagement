@@ -14,7 +14,7 @@ namespace ConnectDB
 
             //Đăng ký SQL Server
             builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -23,6 +23,13 @@ namespace ConnectDB
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            // Tự động tạo cơ sở dữ liệu SQLite nếu chưa tồn tại
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.EnsureCreated();
+            }
 
             // Bật Swagger trên tất cả môi trường để tiện cho việc kiểm thử API trên Render
             app.UseSwagger();
