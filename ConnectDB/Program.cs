@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ConnectDB.Data;
 namespace ConnectDB
 {
@@ -7,6 +7,10 @@ namespace ConnectDB
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Cấu hình Port từ biến môi trường của Render (mặc định 10000 nếu chạy local)
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+            builder.WebHost.UseUrls($"http://*:{port}");
 
             //Đăng ký SQL Server
             builder.Services.AddDbContext<AppDbContext>(options =>
@@ -20,14 +24,14 @@ namespace ConnectDB
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Bật Swagger trên tất cả môi trường để tiện cho việc kiểm thử API trên Render
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            app.UseHttpsRedirection();
+            // Chuyển hướng trang chủ sang giao diện Swagger
+            app.MapGet("/", () => Results.Redirect("/swagger"));
+
+            // app.UseHttpsRedirection(); // ĐÃ TẮT: Tránh lỗi Redirect loop trên Render do Render đã tự động lo phần HTTPS.
 
             app.UseAuthorization();
 
