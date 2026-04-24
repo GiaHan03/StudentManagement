@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ConnectDB.Data;
 using ConnectDB.Models;
@@ -7,74 +7,74 @@ namespace ConnectDB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public StudentsController(AppDbContext context)
+        public EmployeesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/students
+        // GET: api/employees
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var students = await _context.Students.ToListAsync();
-            return Ok(students);
+            var employees = await _context.Employees.ToListAsync();
+            return Ok(employees);
         }
 
-        // GET: api/students/1
+        // GET: api/employees/1
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
 
-            if (student == null)
+            if (employee == null)
                 return NotFound();
 
-            return Ok(student);
+            return Ok(employee);
         }
 
-        // POST: api/students
+        // POST: api/employees
         [HttpPost]
-        public async Task<IActionResult> Create(Student student)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _context.Students.Add(student);
+            _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = student.Id }, student);
+            return CreatedAtAction(nameof(GetById), new { id = employee.Id }, employee);
         }
 
-        // PUT: api/students/1
+        // PUT: api/employees/1
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Student student)
+        public async Task<IActionResult> Update(int id, Employee employee)
         {
-            if (id != student.Id)
+            if (id != employee.Id)
                 return BadRequest();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _context.Entry(student).State = EntityState.Modified;
+            _context.Entry(employee).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // DELETE: api/students/1
+        // DELETE: api/employees/1
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var employee = await _context.Employees.FindAsync(id);
 
-            if (student == null)
+            if (employee == null)
                 return NotFound();
 
-            _context.Students.Remove(student);
+            _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -1,0 +1,15 @@
+@model ConnectDB.Models.Employee
+
+<h2>Xóa nhân viên</h2>
+
+<p>Bạn có chắc muốn xóa nhân viên này không?</p>
+
+<p><strong>Mã NV:</strong> @Model.EmployeeCode</p>
+<p><strong>Họ tên:</strong> @Model.FullName</p>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit">Xóa</button>
+</form>
+
+<a href="/Employee">Hủy</a>

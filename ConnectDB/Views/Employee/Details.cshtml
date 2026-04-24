@@ -1,0 +1,10 @@
+@model ConnectDB.Models.Employee
+
+<h2>Chi tiết nhân viên</h2>
+
+<p><strong>Mã NV:</strong> @Model.EmployeeCode</p>
+<p><strong>Họ tên:</strong> @Model.FullName</p>
+<p><strong>Ngày sinh:</strong> @Model.Birthday.ToShortDateString()</p>
+
+<a href="/Employee/Edit/@Model.Id">Sửa</a> |
+<a href="/Employee">Quay lại</a>

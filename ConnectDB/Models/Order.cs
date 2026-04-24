@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -12,6 +12,10 @@ namespace ConnectDB.Models
         public DateTime NgayBan { get; set; } = DateTime.Now;
 
         public decimal TongTien { get; set; }
+
+        public string Status { get; set; } = "Pending"; // Pending, Processing, Shipping, Delivered, Cancelled
+
+        public string PaymentStatus { get; set; } = "Unpaid"; // Unpaid, Paid
 
         // FK
         public int CustomerId { get; set; }

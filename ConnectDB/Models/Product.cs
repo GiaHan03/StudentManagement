@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 namespace ConnectDB.Models
@@ -18,13 +18,22 @@ namespace ConnectDB.Models
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải >= 0")]
         public int SoLuong { get; set; }
 
-        // ✅ Foreign key (QUAN TRỌNG cho API)
+        public string? HinhAnh { get; set; }
+        public string? MoTa { get; set; }
+
+        // ✅ Category Relationship
         [Required(ErrorMessage = "CategoryId là bắt buộc")]
         public int CategoryId { get; set; }
 
-        // ✅ Navigation (nullable để tránh lỗi binding)
         [ForeignKey(nameof(CategoryId))]
         public Category? Category { get; set; }
+
+        // ✅ Brand Relationship
+        [Required(ErrorMessage = "BrandId là bắt buộc")]
+        public int BrandId { get; set; }
+
+        [ForeignKey(nameof(BrandId))]
+        public Brand? Brand { get; set; }
 
         // Navigation
         [JsonIgnore]

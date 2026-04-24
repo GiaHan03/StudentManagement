@@ -1,0 +1,28 @@
+@model List<ConnectDB.Models.Employee>
+
+<h2>Danh sách nhân viên</h2>
+
+<a href="/Employee/Create">Thêm mới</a>
+
+<table border="1">
+    <tr>
+        <th>Mã NV</th>
+        <th>Họ tên</th>
+        <th>Ngày sinh</th>
+        <th>Hành động</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.EmployeeCode</td>
+            <td>@item.FullName</td>
+            <td>@item.Birthday.ToShortDateString()</td>
+            <td>
+                <a href="/Employee/Details/@item.Id">Xem</a> |
+                <a href="/Employee/Edit/@item.Id">Sửa</a> |
+                <a href="/Employee/Delete/@item.Id">Xóa</a>
+            </td>
+        </tr>
+    }
+</table>

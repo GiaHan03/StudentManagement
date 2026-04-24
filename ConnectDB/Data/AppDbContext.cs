@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ConnectDB.Models;
 
 namespace ConnectDB.Data;
@@ -9,8 +9,9 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Student> Students { get; set; }
+    public DbSet<Employee> Employees { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<Brand> Brands { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
@@ -26,6 +27,12 @@ public class AppDbContext : DbContext
             .HasOne(p => p.Inventory)
             .WithOne(i => i.Product)
             .HasForeignKey<Inventory>(i => i.ProductId);
+
+        // N-1 Product - Brand
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Brand)
+            .WithMany(b => b.Products)
+            .HasForeignKey(p => p.BrandId);
 
         // OrderDetail relations
         modelBuilder.Entity<OrderDetail>()

@@ -1,14 +1,14 @@
-﻿@model ConnectDB.Models.Student
+@model ConnectDB.Models.Employee
 
-<h2>Sửa sinh viên</h2>
+<h2>Sửa nhân viên</h2>
 
 <form method="post">
     <input type="hidden" asp-for="Id" />
 
     <div>
-        Mã SV:
-        <input asp-for="StudentCode" />
-        <span asp-validation-for="StudentCode"></span>
+        Mã NV:
+        <input asp-for="EmployeeCode" />
+        <span asp-validation-for="EmployeeCode"></span>
     </div>
 
     <div>
@@ -25,4 +25,4 @@
     <button type="submit">Cập nhật</button>
 </form>
 
-<a href="/Student">Quay lại</a>
+<a href="/Employee">Quay lại</a>

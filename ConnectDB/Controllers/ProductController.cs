@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ConnectDB.Data;
 using ConnectDB.Models;
@@ -22,6 +22,7 @@ namespace ConnectDB.Controllers
         {
             var products = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Brand)
                 .Include(p => p.Inventory)
                 .ToListAsync();
 
@@ -34,6 +35,7 @@ namespace ConnectDB.Controllers
         {
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Brand)
                 .Include(p => p.Inventory)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
@@ -54,6 +56,11 @@ namespace ConnectDB.Controllers
             var category = await _context.Categories.FindAsync(product.CategoryId);
             if (category == null)
                 return BadRequest("Category không tồn tại");
+
+            // check brand tồn tại
+            var brand = await _context.Brands.FindAsync(product.BrandId);
+            if (brand == null)
+                return BadRequest("Brand không tồn tại");
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
@@ -80,11 +87,19 @@ namespace ConnectDB.Controllers
             if (category == null)
                 return BadRequest("Category không tồn tại");
 
+            // check brand
+            var brand = await _context.Brands.FindAsync(product.BrandId);
+            if (brand == null)
+                return BadRequest("Brand không tồn tại");
+
             // update field
             existingProduct.TenBanh = product.TenBanh;
             existingProduct.Gia = product.Gia;
             existingProduct.SoLuong = product.SoLuong;
             existingProduct.CategoryId = product.CategoryId;
+            existingProduct.BrandId = product.BrandId;
+            existingProduct.HinhAnh = product.HinhAnh;
+            existingProduct.MoTa = product.MoTa;
 
             await _context.SaveChangesAsync();
 

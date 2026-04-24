@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ConnectDB.Data;
 using ConnectDB.Models;
@@ -45,48 +45,78 @@ namespace ConnectDB.Controllers
             return Ok(order);
         }
 
-        // POST: tạo đơn hàng
         [HttpPost]
         public async Task<IActionResult> Create(Order order)
         {
-            if (order.OrderDetails == null || !order.OrderDetails.Any())
-                return BadRequest("Order phải có sản phẩm");
-
-            // check customer
-            var customer = await _context.Customers.FindAsync(order.CustomerId);
-            if (customer == null)
-                return BadRequest("Customer không tồn tại");
-
-            decimal total = 0;
-
-            foreach (var item in order.OrderDetails)
+            try 
             {
-                var product = await _context.Products.FindAsync(item.ProductId);
-                if (product == null)
-                    return BadRequest($"Product {item.ProductId} không tồn tại");
+                if (order.OrderDetails == null || !order.OrderDetails.Any())
+                    return BadRequest("Order phải có sản phẩm");
 
-                var inventory = await _context.Inventories.FindAsync(item.ProductId);
-                if (inventory == null)
-                    return BadRequest($"Chưa có tồn kho cho product {item.ProductId}");
+                // check customer
+                var customer = await _context.Customers.FindAsync(order.CustomerId);
+                if (customer == null)
+                    return BadRequest("Customer không tồn tại");
 
-                // ❗ check tồn kho
-                if (inventory.SoLuongTon < item.SoLuong)
-                    return BadRequest($"Không đủ hàng cho product {item.ProductId}");
+                decimal total = 0;
 
-                item.Gia = product.Gia;
-                total += item.Gia * item.SoLuong;
+                foreach (var item in order.OrderDetails)
+                {
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product == null)
+                        return BadRequest($"Product {item.ProductId} không tồn tại");
 
-                // ✅ trừ kho đúng
-                inventory.SoLuongTon -= item.SoLuong;
-                inventory.NgayCapNhat = DateTime.Now;
+                    var inventory = await _context.Inventories.FindAsync(item.ProductId);
+                    if (inventory == null)
+                        return BadRequest($"Chưa có tồn kho cho product {item.ProductId}");
+
+                    // ❗ check tồn kho
+                    if (inventory.SoLuongTon < item.SoLuong)
+                        return BadRequest($"Không đủ hàng cho product {item.ProductId}");
+
+                    item.Gia = product.Gia;
+                    total += item.Gia * item.SoLuong;
+
+                    // ✅ trừ kho đúng
+                    inventory.SoLuongTon -= item.SoLuong;
+                    inventory.NgayCapNhat = DateTime.Now;
+                }
+
+                order.TongTien = total;
+                order.NgayBan = DateTime.Now;
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                return Ok(order);
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi hệ thống: {ex.Message} | {ex.InnerException?.Message}");
+            }
+        }
 
-            order.TongTien = total;
-            order.NgayBan = DateTime.Now;
+        // PUT: cập nhật trạng thái đơn hàng
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] string status)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) return NotFound("Không tìm thấy đơn hàng");
 
-            _context.Orders.Add(order);
+            order.Status = status;
             await _context.SaveChangesAsync();
+            return Ok(order);
+        }
 
+        // PUT: cập nhật trạng thái thanh toán
+        [HttpPut("{id}/payment")]
+        public async Task<IActionResult> UpdatePayment(int id, [FromBody] string paymentStatus)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) return NotFound("Không tìm thấy đơn hàng");
+
+            order.PaymentStatus = paymentStatus;
+            await _context.SaveChangesAsync();
             return Ok(order);
         }
 
