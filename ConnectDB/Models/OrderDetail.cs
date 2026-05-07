@@ -22,7 +22,6 @@ namespace ConnectDB.Models
         public Order? Order { get; set; }
 
         [ForeignKey("ProductId")]
-        [JsonIgnore]
         public Product? Product { get; set; }
     }
 }
